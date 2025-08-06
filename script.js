@@ -3,7 +3,7 @@
 
     function gameFlow() {
         const { createPlayers, playerArray } = playerData();
-        const { gameboardArray, updateGameboard } = gameboard();
+        const { gameboardArray, updateGameboard, isCellEligible } = gameboard();
         let currentPlayerIndex = 0;
         let continueGame = true;
 
@@ -18,13 +18,21 @@
         }
 
         function handleTurn() {
+            let validMove = false;
+            let row, column;
             let currentPlayer = playerArray[currentPlayerIndex];
-            console.log(`${currentPlayer.name}'s turn!`)
-            const row = Number(prompt("Please enter a row to put piece in."));
-            const column = Number(prompt("Please enter a column to put piece in."));
-            updateGameboard(row, column, currentPlayer.token);
+            alert(`${currentPlayer.name}'s turn!`)
 
-            console.log("NEW BOARD")
+            do {
+                row = Number(prompt("Please enter a row to put piece in."));
+                column = Number(prompt("Please enter a column to put piece in."));
+                validMove = isCellEligible(row, column);
+                if (!validMove) {
+                    alert("Not a valid cell! Please try again.");
+                }
+            } while (!validMove)
+            
+            updateGameboard(row, column, currentPlayer.token);
             console.log( gameboardArray );
             currentPlayerIndex = 1 - currentPlayerIndex;
         }
@@ -60,7 +68,16 @@
             gameboardArray[row][column] = token;
         }
 
-        return { gameboardArray, updateGameboard };
+        function isCellEligible(row, column) {
+            // Check if row and column are in bounds of board
+            if (row < 0 || row > 2 || column < 0 || column > 2) {
+                return false;
+            }
+            return gameboardArray[row][column] === "?";
+        }
+        
+        // Check if cell is "?", meaning it is unclaimed
+        return { gameboardArray, updateGameboard, isCellEligible };
     }
 
 })();
