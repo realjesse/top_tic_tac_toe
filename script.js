@@ -33,8 +33,52 @@
             } while (!validMove)
             
             updateGameboard(row, column, currentPlayer.token);
+            if (checkWin()) alert("YOU WIN!");
             console.log( gameboardArray );
             currentPlayerIndex = 1 - currentPlayerIndex;
+        }
+
+        function checkWin() {
+            function checkThreeTokens(tokenArray) {
+                return tokenArray[0] !== "?" && tokenArray.every(token => token === tokenArray[0]);
+            }
+
+            function checkRows() {
+                for (const row of gameboardArray) {
+                    if (checkThreeTokens(row)) {
+                        return row[0];
+                    }
+                }
+                return null;
+            }
+
+            function checkColumns() {
+                for (let i = 0; i < 3; i++) {
+                    let columnArray = [gameboardArray[0][i], gameboardArray[1][i], gameboardArray[2][i]]
+                    if (checkThreeTokens(columnArray)) {
+                        return columnArray[0];
+                    }
+                }
+                return null;
+            }
+
+            function checkDiagonals() {
+                // check positive sloped diagonal
+                let positiveSlopedDiagonal = [gameboardArray[2][0], gameboardArray[1][1], gameboardArray[0][2]];
+                if (checkThreeTokens(positiveSlopedDiagonal)) {
+                    return positiveSlopedDiagonal[0];
+                }
+                // Check negative sloped diagonal
+                let negativeSLopedDiagonal = [gameboardArray[0][0], gameboardArray[1][1], gameboardArray[2][2]];
+                console.log(negativeSLopedDiagonal);
+                if (checkThreeTokens(negativeSLopedDiagonal)) {
+                    return negativeSLopedDiagonal[0];
+                }
+                // Else, return null
+                return null;
+            }
+
+            return checkRows() || checkColumns() || checkDiagonals() || false;
         }
 
         return { startGame };
@@ -70,7 +114,13 @@
 
         function isCellEligible(row, column) {
             // Check if row and column are in bounds of board
-            if (row < 0 || row > 2 || column < 0 || column > 2) {
+            if (!Number.isInteger(row) || 
+                !Number.isInteger(column) || 
+                row < 0 || 
+                row > 2 || 
+                column < 0 || 
+                column > 2
+                ) {
                 return false;
             }
             return gameboardArray[row][column] === "?";
