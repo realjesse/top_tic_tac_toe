@@ -10,12 +10,28 @@
 <body>
     <div class="wrapper">
         <h1>Tic Tac Toe!</h1>
+        <p class="player-turn">
+            
+        </p>
         <div class="board">
 
         </div>
         <div class="button-container">
 
         </div>
+        <dialog open>
+            <form class="name-form">
+                <p>Enter the first player's name!</p>
+                <label for="firstName">Name</label>
+                <input type="text" id="firstName" name="firstName">
+                <p>Enter the second player's name!</p>
+                <label for="secondName">Name</label>
+                <input type="text" id="secondName" name="secondName">
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </dialog>
     </div>
 </body>
 </html>

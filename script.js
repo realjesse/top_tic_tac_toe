@@ -1,14 +1,16 @@
 (function ticTactoeGame() {
+    const { createPlayers, playerArray } = playerData();
+    let currentPlayerIndex = 0;
     gameFlow().startGame();
 
     function gameFlow() {
-        const { createPlayers, playerArray } = playerData();
+        // const { createPlayers, playerArray } = playerData();
         const { gameboardArray, updateGameboard, isCellEligible } = gameboard();
-        let currentPlayerIndex = 0;
         let continueGame = true;
 
+        createPlayers();
+
         function startGame() {
-            createPlayers();
             while (continueGame) {
                 handleTurn();
                 if (prompt("End?") === "y") {
@@ -91,11 +93,23 @@
         ];
 
         function createPlayers() {
-            playerArray.forEach((player, index) => {
-                const name = prompt(`Please enter the name for player ${index + 1}, who has token ${player.token}: `)
-                player.name = name;
+            const nameFormNode = document.querySelector(".name-form");
+            const firstNameNode = document.querySelector("#firstName");
+            const secondNameNode = document.querySelector("#secondName");
+            nameFormNode.addEventListener("submit", e => {
+                e.preventDefault();
+
+                // Assign values
+                playerArray[0]["name"] = firstNameNode.value;
+                playerArray[1]["name"] = secondNameNode.value;
+
+                // Clear values
+                firstNameNode.value = "";
+                secondNameNode.value = "";
+                updatePlayerName(currentPlayerIndex);
+
+                startGame();
             })
-            console.log(playerArray);
         }
 
         return { createPlayers, playerArray };
@@ -128,6 +142,22 @@
         
         // Check if cell is "?", meaning it is unclaimed
         return { gameboardArray, updateGameboard, isCellEligible };
+    }
+
+    function handleUI() {
+
+        function updatePlayerName(playerIndex) {
+            const playerNameParagraph = document.querySelector(".player-turn");
+
+            if (playerIndex === 0) {
+                playerNameParagraph.textContent = `${firstName}'s turn!`;
+            }
+            else {
+                playerNameParagraph.textContent = `${secondName}'s turn!`;
+            }
+        }
+
+        return { getPlayerNames, updatePlayerName };
     }
 
 })();
