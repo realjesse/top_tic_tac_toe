@@ -1,5 +1,6 @@
 (function ticTactoeGame() {
     const { createPlayers, playerArray } = playerData();
+    const { updatePlayerName } = handleUI();
     let currentPlayerIndex = 0;
     gameFlow().startGame();
 
@@ -8,15 +9,14 @@
         const { gameboardArray, updateGameboard, isCellEligible } = gameboard();
         let continueGame = true;
 
-        createPlayers();
-
         function startGame() {
-            while (continueGame) {
-                handleTurn();
-                if (prompt("End?") === "y") {
-                    continueGame = false;
-                }
-            }
+            createPlayers();
+            // while (continueGame) {
+            //     handleTurn();
+            //     if (prompt("End?") === "y") {
+            //         continueGame = false;
+            //     }
+            // }
         }
 
         function handleTurn() {
@@ -94,8 +94,12 @@
 
         function createPlayers() {
             const nameFormNode = document.querySelector(".name-form");
+            const nameDialogNode = document.querySelector(".name-dialog");
             const firstNameNode = document.querySelector("#firstName");
             const secondNameNode = document.querySelector("#secondName");
+
+            nameDialogNode.showModal();
+
             nameFormNode.addEventListener("submit", e => {
                 e.preventDefault();
 
@@ -108,7 +112,7 @@
                 secondNameNode.value = "";
                 updatePlayerName(currentPlayerIndex);
 
-                startGame();
+                nameDialogNode.close();
             })
         }
 
@@ -150,14 +154,14 @@
             const playerNameParagraph = document.querySelector(".player-turn");
 
             if (playerIndex === 0) {
-                playerNameParagraph.textContent = `${firstName}'s turn!`;
+                playerNameParagraph.textContent = `${playerArray[0]["name"]}'s turn!`;
             }
             else {
-                playerNameParagraph.textContent = `${secondName}'s turn!`;
+                playerNameParagraph.textContent = `${playerArray[1]["name"]}'s turn!`;
             }
         }
 
-        return { getPlayerNames, updatePlayerName };
+        return { updatePlayerName };
     }
 
 })();
