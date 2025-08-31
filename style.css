@@ -107,6 +107,10 @@ dialog {
 
 .cell {
   border: solid 2px white;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  font-size: 8vmin;
 }
 
 .cell:nth-child(-n + 3) {
