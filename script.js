@@ -166,13 +166,21 @@
 
 // })();
 
-function ticTacToe() {
-  application();
-  function UI() {}
+const ticTacToe = function ticTacToe() {
+  const UI = function UI() {
+    const createCellEventListener = function createCellEventListener() {
+      document.body.addEventListener("click", (event) => {
+        if (event.target.className.includes("cell")) {
+          console.log("test");
+        }
+      });
+    };
 
-  function application() {
-    let boardCells = domain().createBoardCells();
-    console.log(boardCells);
+    return { createCellEventListener };
+  };
+
+  const application = function application() {
+    let boardCells = domain().createCells();
 
     function updateBoardCell(position, value) {
       for (i = 0; i++; i < boardCells.length) {
@@ -183,20 +191,45 @@ function ticTacToe() {
     }
 
     return { updateBoardCell };
-  }
+  };
 
-  function domain() {
-    function createBoardCells() {
-      let boardCells = [];
-      for (let i = 0; i < 9; i++) {
-        let cell = { position: i, value: "" };
-        boardCells.push(cell);
-      }
-      return boardCells;
-    }
+  // Add functions to this to update function without causing side effects
+  const domain = function domain() {
+    const createCells = function createCells() {
+      let cells = [];
 
-    return { createBoardCells };
-  }
-}
+      const get = function get() {
+        return cells;
+      };
+
+      const setValue = function setValue(position, value) {
+        returnCellBasedOnPosition(position).value = value;
+      };
+
+      const returnCellBasedOnPosition = function returnCellBasedOnPosition(
+        position
+      ) {
+        return cells.find((cell) => cell.position === position);
+      };
+
+      const add = function add(value = 9) {
+        for (let i = 0; i < value; i++) {
+          cells.push({ position: i, value: "" });
+        }
+      };
+
+      return { get, setValue, add };
+    };
+
+    return { createCells };
+  };
+
+  let boardCells = domain().createCells();
+  boardCells.add();
+  console.log(boardCells.get());
+  boardCells.setValue(0, "test");
+  console.log(boardCells.get());
+  UI().createCellEventListener();
+};
 
 window.addEventListener("load", ticTacToe);
